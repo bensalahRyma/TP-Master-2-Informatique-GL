@@ -251,6 +251,23 @@ public final class GenericConcurrentCache<K, V> implements Cache<K, V> { ... }
 
 ```
 #### [2] Préconditions & Postconditions
+Nous avons explicité dans la Javadoc (et parfois via Objects.requireNonNull) les préconditions et postconditions importantes :
+#### Préconditions :
+- maxSize > 0 pour GenericConcurrentCache (sinon IllegalArgumentException).
+- key != null dans get, put, invalidate.
+- Stratégie d’éviction non nulle lors de la construction du cache.
+
+#### Postconditions :
+##### Après un put(key, value) valide :
+- get(key) renvoie value tant que l’entrée n’est pas expirée/éjectée.
+- Les statistiques de puts sont incrémentées.
+
+##### Après invalidate(key) :
+
+- get(key) renvoie null.
+##### Après clear() :
+
+- Le cache est vide, getStats() reflète le reset attendu (ou au minimum le nombre d’éléments à 0).
 Exemples intégrés dans le code :
 
 ##### Méthode get()
